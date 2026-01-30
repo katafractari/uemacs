@@ -23,6 +23,14 @@
 #include "efunc.h"
 #include "utf8.h"
 
+/* These flags are Linux-specific and not available on macOS */
+#ifndef OLCUC
+#define OLCUC 0
+#endif
+#ifndef XCASE
+#define XCASE 0
+#endif
+
 static int kbdflgs;				/* saved keyboard fd flags      */
 static int kbdpoll;				/* in O_NDELAY mode             */
 

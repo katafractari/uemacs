@@ -14,6 +14,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <errno.h>
+#include <pwd.h>
 
 #define MAXLOCK 512
 #define MAXNAME 128
@@ -53,9 +54,9 @@ char *dolock(char *fname)
 		return "LOCK ERROR: cannot access lock file";
 	}
 	if ((n = read(fd, locker, MAXNAME)) < 1) {
+		struct passwd *pw = getpwuid(getuid());
 		lseek(fd, 0, SEEK_SET);
-/*		strcpy(locker, getlogin()); */
-		cuserid(locker);
+		strcpy(locker, pw ? pw->pw_name : "unknown");
 		strcat(locker + strlen(locker), "@");
 		gethostname(locker + strlen(locker), 64);
 		write(fd, locker, strlen(locker));
